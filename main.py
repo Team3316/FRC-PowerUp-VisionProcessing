@@ -139,7 +139,6 @@ def run_vision_command(cam, robot_com, args):
         logger.error("Unhandled Exception:\n" + traceback.format_exc())
         logger.debug("Skipping to the next frame!")
 
-
     finally:
         destroyAllWindows()
         cam.cam.release()
