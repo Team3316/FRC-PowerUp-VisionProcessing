@@ -20,7 +20,7 @@ The possible command line arguments are as following:
 
 # Pushing/Commiting/PRs
 - Branches are mandatory!
-- When merge is needed, please create a PR and add Barak & Leon as Reviewers.
+- When merge is needed, please create a PR and add Barak & Leon & Jonathan as Reviewers.
 
 # Constants to Update Per Lightning Conditions or Camera
 - BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA
