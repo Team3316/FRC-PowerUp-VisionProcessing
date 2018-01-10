@@ -20,4 +20,12 @@ The possible command line arguments are as following:
 
 # Pushing/Commiting/PRs
 - Branches are mandatory!
-- When merge is needed, please create a PR and add barak & leon as Reviewers.
+- When merge is needed, please create a PR and add Barak & Leon as Reviewers.
+
+# Constants to Update Per Lightning Conditions or Camera
+- BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA
+- MIN_BOUND_RECT_AREA, MAX_BOUND_RECT_AREA
+- CAMERA_VIEW_ANGLE_Y, CAMERA_VIEW_ANGLE_X
+- LOWER_BOUND, UPPER_BOUND
+
+*(NOTE: Description of the above constants can be found in constans.py)*
