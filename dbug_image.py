@@ -105,3 +105,13 @@ class DBugBinaryImage(DBugAbstractImage):
         """
         (contours, _) = cv2.findContours(self.image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return [DbugContour(cv_contour=contour) for contour in contours]
+
+    def get_median_blur(self, kernel=13, iterations=1):
+        """
+        Returns a median blur DBugColorImage with the given kernel size and iterations
+        """
+        blur_result = self.image
+        for _ in range(iterations):
+            blur_result = cv2.medianBlur(blur_result, kernel)
+
+        return DBugBinaryImage(blur_result)

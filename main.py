@@ -92,14 +92,15 @@ def run_vision_command(cam, robot_com, args):
             frames_processed += 1
 
             binary_image = frame.filter_with_colors(LOWER_BOUND, UPPER_BOUND)
+            binary_image = binary_image.get_median_blur()
             unfiltered_contours = binary_image.detect_contours()
 
             filtered_contours = filter_sort_contours(unfiltered_contours)
-            powercube_contour = filtered_contours[0]
             result_obj = None
 
             if len(filtered_contours) >= 1:
 
+                powercube_contour = filtered_contours[0]
                 result_obj = DBugResult(result_object=powercube_contour)
 
             if args.enable_network:
@@ -123,7 +124,9 @@ def run_vision_command(cam, robot_com, args):
 
                 # Angle text:
 
-                copy_image.draw_text('AA: ' + str(result_obj.azimuth_angle), origin=(30,30))
+                copy_image.draw_text('AA: ' + str(result_obj.azimuth_angle), origin=(30,10), text_scale=0.5)
+                copy_image.draw_text('Dis: ' + str(result_obj.distance_from_camera), origin=(30,30), text_scale=0.5)
+                copy_image.draw_text('T: ' + str(result_obj.result_type), origin=(30,50), text_scale=0.5)
 
                 if args.dump_image:
                     # Finally save the frames:
@@ -132,12 +135,12 @@ def run_vision_command(cam, robot_com, args):
                 elif args.display_gui:
                     copy_image.display_gui_window("Result Image")
 
-    except Exception as ex:
-
-        # MARK: Possible Exception and reasons:
-        # 1. Example Exception - Reason For Exception
-        logger.error("Unhandled Exception:\n" + traceback.format_exc())
-        logger.debug("Skipping to the next frame!")
+    # except Exception as ex:
+    #
+    #     # MARK: Possible Exception and reasons:
+    #     # 1. Example Exception - Reason For Exception
+    #     logger.error("Unhandled Exception:\n" + traceback.format_exc())
+    #     logger.debug("Skipping to the next frame!")
 
     finally:
         destroyAllWindows()

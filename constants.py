@@ -55,4 +55,8 @@ MIN_HEIGHT_WIDTH_RATIO = 0
 # Distance Calculation
 
 # The area (in pixels) of the bounding rotated rectangle of a powercube from 1m distance.
-BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA = 40809
+BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA = 13600.0
+
+# width/height ratio for detecting result object type:
+SINGLE_POWER_CUBE_MAX_RATIO = 1.5
+DOUBLE_POWER_CUBE_MAX_RATIO = 2.5
