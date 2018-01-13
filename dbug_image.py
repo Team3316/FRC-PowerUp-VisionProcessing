@@ -103,11 +103,7 @@ class DBugBinaryImage(DBugAbstractImage):
         Detects the contours in self. A contour is a set of white pixels connected to each other.
         :return: the contours that were found as cv2 contours.
         """
-<<<<<<< HEAD
         (_,contours, _) = cv2.findContours(self.image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        return [DbugContour(cv_contour=contour) for contour in contours]
-=======
-        (contours, _) = cv2.findContours(self.image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return [DbugContour(cv_contour=contour) for contour in contours]
 
     def get_median_blur(self, kernel=13, iterations=1):
@@ -119,4 +115,3 @@ class DBugBinaryImage(DBugAbstractImage):
             blur_result = cv2.medianBlur(blur_result, kernel)
 
         return DBugBinaryImage(blur_result)
->>>>>>> add_distance_and_multiple_power_cubes_detection

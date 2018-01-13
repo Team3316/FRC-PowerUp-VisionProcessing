@@ -96,15 +96,12 @@ def run_vision_command(cam, robot_com, args):
             unfiltered_contours = binary_image.detect_contours()
 
             filtered_contours = filter_sort_contours(unfiltered_contours)
-<<<<<<< HEAD
 
             if len(filtered_contours) < 1:
                 logger.error("Didn't find any PowerCubes")
                 continue
 
             powercube_contour = filtered_contours[0]
-=======
->>>>>>> add_distance_and_multiple_power_cubes_detection
             result_obj = None
 
             if len(filtered_contours) >= 1:
