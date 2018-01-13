@@ -103,3 +103,9 @@ ENV/
 # custom file types
 *.loc
 *.pyc
+
+# IDEA directory
+.idea/
+
+# Result image
+Result.png

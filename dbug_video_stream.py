@@ -1,8 +1,7 @@
 from dbug_image import DBugColorImage
 from glob import glob
 from constants import *
-from cv2 import VideoCapture
-from cv2 import cv
+from cv2 import VideoCapture, CAP_PROP_BRIGHTNESS, CAP_PROP_SATURATION, CAP_PROP_EXPOSURE, CAP_PROP_CONTRAST
 from logger import logger
 from numpy import rot90
 
@@ -34,16 +33,16 @@ class DBugVideoStream(object):
         if not self.cam.set(4, RESIZE_IMAGE_HEIGHT):
             logger.warning("Set height failed")
 
-        if not self.cam.set(cv.CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS):
+        if not self.cam.set(CAP_PROP_BRIGHTNESS, BRIGHTNESS):
             logger.warning("Set brightness failed")
 
-        if not self.cam.set(cv.CV_CAP_PROP_SATURATION, SATURATION):
+        if not self.cam.set(CAP_PROP_SATURATION, SATURATION):
             logger.warning("Set saturation failed")
 
-        if not self.cam.set(cv.CV_CAP_PROP_EXPOSURE, EXPOSURE):
+        if not self.cam.set(CAP_PROP_EXPOSURE, EXPOSURE):
             logger.warning("Set exposure failed")
 
-        if not self.cam.set(cv.CV_CAP_PROP_CONTRAST, CONTRAST):
+        if not self.cam.set(CAP_PROP_CONTRAST, CONTRAST):
             logger.warning("Set contrast failed")
 
         return self.cam
