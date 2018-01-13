@@ -73,6 +73,33 @@ def init_vision_command(args):
 
     return cam, robot_com
 
+def handle_image(args, frames_processed, frame, contours, powercube, result):
+    """
+    Handles the GUI / image dumping.
+    """
+    if ((args.dump_image and frames_processed % DUMP_IMAGE_EVERY_FRAMES == 0) or args.display_gui) and len(contours) >= 1:
+
+        # Filtered contours:
+        copy_image = frame.copy()
+        copy_image.draw_contours(contours, line_color=(255,255,0))
+
+        # Rotated enclosing rectangles on PowerCube:
+
+        copy_image.draw_rotated_enclosing_rectangle(contour=powercube, line_color=(0,0,255))
+        copy_image.draw_contours([powercube], line_color=(255,0,0))
+
+        # Angle text:
+
+        copy_image.draw_text('AA: ' + str(result.azimuth_angle), origin=(30,10), text_scale=0.5)
+        copy_image.draw_text('Dis: ' + str(result.distance_from_camera), origin=(30,30), text_scale=0.5)
+        copy_image.draw_text('T: ' + str(result.result_type), origin=(30,50), text_scale=0.5)
+
+        if args.dump_image:
+            # Finally save the frames:
+            logger.debug("Writing frame to path: %s", DUMP_IMAGE_PATH)
+            copy_image.save_to_path(path=DUMP_IMAGE_PATH)
+        elif args.display_gui:
+            copy_image.display_gui_window("Result Image")
 
 def run_vision_command(cam, robot_com, args):
 
@@ -105,8 +132,6 @@ def run_vision_command(cam, robot_com, args):
             result_obj = None
 
             if len(filtered_contours) >= 1:
-
-                powercube_contour = filtered_contours[0]
                 result_obj = DBugResult(result_object=powercube_contour)
 
             if args.enable_network:
@@ -117,31 +142,11 @@ def run_vision_command(cam, robot_com, args):
                 else:
                     robot_com.send_data(result_obj=result_obj)
 
-            if ((args.dump_image and frames_processed % DUMP_IMAGE_EVERY_FRAMES == 0) or args.display_gui) and len(filtered_contours) >= 1:
+            handle_image(args, frames_processed, frame, filtered_contours, powercube_contour, result_obj)
 
-                # Filtered contours:
-                copy_image = frame.copy()
-                copy_image.draw_contours(filtered_contours, line_color=(255,255,0))
-
-                # Rotated enclosing rectangles on PowerCube:
-
-                copy_image.draw_rotated_enclosing_rectangle(contour=powercube_contour, line_color=(0,0,255))
-                copy_image.draw_contours([powercube_contour], line_color=(255,0,0))
-
-                # Angle text:
-
-                copy_image.draw_text('AA: ' + str(result_obj.azimuth_angle), origin=(30,10), text_scale=0.5)
-                copy_image.draw_text('Dis: ' + str(result_obj.distance_from_camera), origin=(30,30), text_scale=0.5)
-                copy_image.draw_text('T: ' + str(result_obj.result_type), origin=(30,50), text_scale=0.5)
-
-                if args.dump_image:
-                    # Finally save the frames:
-                    logger.debug("Writing frame to path: %s", DUMP_IMAGE_PATH)
-                    copy_image.save_to_path(path=DUMP_IMAGE_PATH)
-                elif args.display_gui:
-                    copy_image.display_gui_window("Result Image")
-                    if waitKey(1) & 0xFF == ord('q'):
-                        break
+            # OpenCV 3 GUI fix; needs to be here to be in the loop
+            if args.display_gui and (waitKey(1) & 0xFF == ord('q')):
+                break
 
 
     # except Exception as ex:

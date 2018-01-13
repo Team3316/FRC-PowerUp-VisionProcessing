@@ -21,8 +21,8 @@ class DBugResult(object):
             self.result_type = self._get_result_type(width, height, rotation_angle)
 
             self.azimuth_angle = self._get_azimuth_angle(object_x_center=x_cord,
-                                                               frame_width=RESIZE_IMAGE_WIDTH,
-                                                               viewing_angle=CAMERA_VIEW_ANGLE_X)
+                                                         frame_width=RESIZE_IMAGE_WIDTH,
+                                                         viewing_angle=CAMERA_VIEW_ANGLE_X)
             self.distance_from_camera = self._get_approximate_distance(width,
                                                                        height,
                                                                        BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA)
