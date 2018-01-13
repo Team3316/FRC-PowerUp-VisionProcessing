@@ -2,7 +2,7 @@
 import argparse
 import traceback
 
-from cv2 import destroyAllWindows
+from cv2 import destroyAllWindows, waitKey
 from constants import *
 from dbug_networking import DBugNetworking
 from dbug_video_stream import DBugVideoStream
@@ -95,6 +95,11 @@ def run_vision_command(cam, robot_com, args):
             unfiltered_contours = binary_image.detect_contours()
 
             filtered_contours = filter_sort_contours(unfiltered_contours)
+
+            if len(filtered_contours) < 1:
+                logger.error("Didn't find any PowerCubes")
+                continue
+
             powercube_contour = filtered_contours[0]
             result_obj = None
 
@@ -131,6 +136,9 @@ def run_vision_command(cam, robot_com, args):
                     copy_image.save_to_path(path=DUMP_IMAGE_PATH)
                 elif args.display_gui:
                     copy_image.display_gui_window("Result Image")
+                    if waitKey(1) & 0xFF == ord('q'):
+                        break
+
 
     except Exception as ex:
 
