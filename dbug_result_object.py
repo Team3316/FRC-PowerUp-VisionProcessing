@@ -19,10 +19,11 @@ class DBugResult(object):
             (x_cord, y_cord),(width, height), rotation_angle = self.result_object.rotated_enclosing_rectangle()
 
             self.result_type = self._get_result_type(width, height, rotation_angle)
-
+            # TODO: check if we need object_width of rotated or straight rectangle
             self.azimuth_angle = self._get_azimuth_angle(object_x_center=x_cord,
-                                                               frame_width=RESIZE_IMAGE_WIDTH,
-                                                               viewing_angle=CAMERA_VIEW_ANGLE_X)
+                                                         object_width=width,
+                                                         frame_width=RESIZE_IMAGE_WIDTH,
+                                                         viewing_angle=CAMERA_VIEW_ANGLE_X)
             self.distance_from_camera = self._get_approximate_distance(width,
                                                                        height,
                                                                        BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA)
@@ -64,21 +65,22 @@ class DBugResult(object):
 
     # MARK: Static methods
 
-    def _get_azimuth_angle(self, object_x_center, frame_width, viewing_angle):
+    def _get_azimuth_angle(self, object_x_center, object_width, frame_width, viewing_angle):
         """
         :param object_x_center: The center of the object in the x coord (top-left)
+        :param object_width: The object width in pixels
         :param frame_width: The frame width in pixels
         :param viewing_angle: The frame viewing angle - used to calculate the result in angles(degrees)
         :return: The azimuthal angle of center of frame to center of object
         """
         # if we have 2 power cubes we want to get the center of the first one, and not the center of both
         if self.result_type == DBugResult.ResultType.single_power_cube:
-            ratio = 2.0
+            center_offset = 0
         elif self.result_type == DBugResult.ResultType.double_power_cube:
-            ratio = 4.0
+            center_offset = object_width/4.0
         else:
             return None
-        return ((object_x_center - frame_width/ratio)/frame_width)*viewing_angle
+        return (((object_x_center - center_offset) - frame_width/2.0)/frame_width)*viewing_angle
 
     def _get_approximate_distance(self, object_width, object_height, area_1m_far):
         """
