@@ -2,7 +2,8 @@
 This repo includes all the code related to vision processing, just for the 2018 POWER UP mission.
 
 # OpenCV
-This code is based on OpenCV (cv2)
+This code is based on OpenCV (cv2).
+This code was tested on Windows and MacOS using OpenCV 2.4.12.
 
 # Running
 - Please use sudo when running main (i.e sudo python main.py) to allow logging.
