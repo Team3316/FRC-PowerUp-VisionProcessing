@@ -74,7 +74,7 @@ class DBugColorImage(DBugAbstractImage):
         :return: None
         """
         rect = contour.rotated_enclosing_rectangle()
-        box = cv2.boxPoints(rect)
+        box = cv2.cv.BoxPoints(rect)
         box = np.int0(box)
         self.draw_contours([DbugContour(cv_contour=box)], line_color=line_color, line_thickness=line_thickness)
 
@@ -103,10 +103,10 @@ class DBugBinaryImage(DBugAbstractImage):
         Detects the contours in self. A contour is a set of white pixels connected to each other.
         :return: the contours that were found as cv2 contours.
         """
-        (_,contours, _) = cv2.findContours(self.image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        (contours, _) = cv2.findContours(self.image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return [DbugContour(cv_contour=contour) for contour in contours]
 
-    def get_median_blur(self, kernel=13, iterations=1):
+    def get_median_blur(self, kernel=15, iterations=2):
         """
         Returns a median blur DBugColorImage with the given kernel size and iterations
         """

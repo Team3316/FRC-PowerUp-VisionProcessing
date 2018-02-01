@@ -13,6 +13,7 @@ class DBugResult(object):
         self.result_object = result_object
         if result_object is None:
             self.azimuth_angle = UNABLE_TO_PROC_DEFAULT_VAL
+            self.distance_from_camera = UNABLE_TO_PROC_DEFAULT_VAL
 
         else:
 
@@ -23,9 +24,11 @@ class DBugResult(object):
             self.azimuth_angle = self._get_azimuth_angle(object_x_center=x_cord,
                                                          frame_width=RESIZE_IMAGE_WIDTH,
                                                          viewing_angle=CAMERA_VIEW_ANGLE_X)
-            self.distance_from_camera = self._get_approximate_distance(width,
-                                                                       height,
-                                                                       BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_AREA)
+            self.area = self._get_area(width, height)
+            self.distance_from_camera = self._get_approximate_distance(height,
+                                                                       BASE_1M_POWER_CUBE_BOUNDING_ROTATED_RECTANGLE_HEIGHT)
+            self.height = height
+
             if self.distance_from_camera is None:
                 self.distance_from_camera = UNABLE_TO_PROC_DEFAULT_VAL
 
@@ -80,18 +83,25 @@ class DBugResult(object):
             return None
         return ((object_x_center - frame_width/ratio)/frame_width)*viewing_angle
 
-    def _get_approximate_distance(self, object_width, object_height, area_1m_far):
-        """
-        :param object_width: The object width (in pixels) to calculate the area.
-        :param object_height: The object height (in pixels) to calculate the area.
-        :param area_1m_far: The area in pixels of the same object in a frame taken when the object is 1m from camera.
-        :return: The approximate distance of the given object from the camera
-        """
+#    def _get_approximate_distance(self, object_area, area_1m_far):
+#        """
+#        :param object_width: The object width (in pixels) to calculate the area.
+#        :param object_height: The object height (in pixels) to calculate the area.
+#        :param area_1m_far: The area in pixels of the same object in a frame taken when the object is 1m from camera.
+#        :return: The approximate distance of the given object from the camera
+#        """
+#        if object_area == None:
+#            return None
+#        return sqrt(area_1m_far/object_area)  # sqrt because the ration is double the distance because the area is w*h
+    
+    def _get_approximate_distance(self, object_height, height_1m_far):
+        return height_1m_far/object_height
+
+    def _get_area(self, width, height):
         if self.result_type == DBugResult.ResultType.single_power_cube:
-            object_area = object_width * object_height
+            return width * height
         elif self.result_type == DBugResult.ResultType.double_power_cube:
-            object_area = (float(object_width)/2.0) * float(object_height)
+            return (float(width) / 2.0) * float(height)
         else:
             return None
-        return sqrt(area_1m_far/object_area)  # sqrt because the ration is double the distance because the area is w*h
 

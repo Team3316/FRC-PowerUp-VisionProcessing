@@ -92,7 +92,8 @@ def handle_image(args, frames_processed, frame, contours, powercube, result):
 
         copy_image.draw_text('AA: ' + str(result.azimuth_angle), origin=(30,10), text_scale=0.5)
         copy_image.draw_text('Dis: ' + str(result.distance_from_camera), origin=(30,30), text_scale=0.5)
-        copy_image.draw_text('T: ' + str(result.result_type), origin=(30,50), text_scale=0.5)
+        copy_image.draw_text('Height: ' + str(result.height), origin=(30,50), text_scale=0.5)
+        copy_image.draw_text('T: ' + str(result.result_type), origin=(30,70), text_scale=0.5)
 
         if args.dump_image:
             # Finally save the frames:
@@ -100,6 +101,14 @@ def handle_image(args, frames_processed, frame, contours, powercube, result):
             copy_image.save_to_path(path=DUMP_IMAGE_PATH)
         elif args.display_gui:
             copy_image.display_gui_window("Result Image")
+
+def send_to_roborio(args, robot_com, result_obj):
+    if args.enable_network:
+        if result_obj is None or result_obj.azimuth_angle == UNABLE_TO_PROC_DEFAULT_VAL:
+            robot_com.send_no_data()
+            logger.warning("Couldn't find PowerCubes... sending no data")
+        else:
+            robot_com.send_data(result_obj=result_obj)
 
 def run_vision_command(cam, robot_com, args):
 
@@ -114,6 +123,11 @@ def run_vision_command(cam, robot_com, args):
 
             if frame is None:
                 logger.error("Couldn't Read Image from self.cam!")
+                if args.display_gui:
+                    frame.display_gui_window("Result Image")
+                    # OpenCV 3 GUI fix; needs to be here to be in the loop
+                    if args.display_gui and (waitKey(1) & 0xFF == ord('q')):
+                        break
                 continue
 
             frames_processed += 1
@@ -126,6 +140,13 @@ def run_vision_command(cam, robot_com, args):
 
             if len(filtered_contours) < 1:
                 logger.error("Didn't find any PowerCubes")
+                send_to_roborio(args, robot_com, None)
+
+                if args.display_gui:
+                    frame.display_gui_window("Result Image")
+                    # OpenCV 3 GUI fix; needs to be here to be in the loop
+                    if args.display_gui and (waitKey(1) & 0xFF == ord('q')):
+                        break
                 continue
 
             powercube_contour = filtered_contours[0]
@@ -134,13 +155,7 @@ def run_vision_command(cam, robot_com, args):
             if len(filtered_contours) >= 1:
                 result_obj = DBugResult(result_object=powercube_contour)
 
-            if args.enable_network:
-
-                if result_obj is None or result_obj.azimuth_angle == UNABLE_TO_PROC_DEFAULT_VAL:
-                    robot_com.send_no_data()
-                    logger.warning("Couldn't find PowerCubes... sending no data")
-                else:
-                    robot_com.send_data(result_obj=result_obj)
+            send_to_roborio(args, robot_com, result_obj)
 
             handle_image(args, frames_processed, frame, filtered_contours, powercube_contour, result_obj)
 

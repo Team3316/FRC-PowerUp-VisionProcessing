@@ -51,6 +51,7 @@ class DBugNetworking(object):
             result_obj = self.ERROR_VALUE
 
         return dict(AA=DBugNetworking.format_parameter(result_obj.azimuth_angle),
+                    DIS=DBugNetworking.format_parameter(result_obj.distance_from_camera),
                     IOD=DBugNetworking.format_parameter(identified))
 
     def send_data(self, result_obj=None):
