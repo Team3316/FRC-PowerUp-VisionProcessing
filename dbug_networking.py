@@ -1,7 +1,9 @@
 import socket
 from dbug_result_object import DBugResult
-from logger import logger
+from logger import get_logger
 from constants import *
+
+logger = get_logger(__name__)
 
 class DBugNetworking(object):
     """

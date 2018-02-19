@@ -7,9 +7,10 @@ from constants import *
 from dbug_networking import DBugNetworking
 from dbug_video_stream import DBugVideoStream
 from dbug_result_object import DBugResult
-from logger import logger
+from logger import get_logger
 from dbug_contour import DbugContour
 
+logger = get_logger()
 
 def parse_arguments():
     parser = argparse.ArgumentParser()

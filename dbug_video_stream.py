@@ -2,9 +2,10 @@ from dbug_image import DBugColorImage
 from glob import glob
 from constants import *
 from cv2 import VideoCapture, cv
-from logger import logger
+from logger import get_logger
 from numpy import rot90
 
+logger = get_logger(__name__)
 
 class DBugVideoStream(object):
     """
