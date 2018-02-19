@@ -1,0 +1,13 @@
+[Unit]
+Description=Vision processing service for D-Bug
+StartLimitInterval=300
+StartLimitBurst=6
+
+[Service]
+WorkingDirectory=/home/pi/FRC-PowerUp-VisionProcessing/
+ExecStart=/usr/bin/python main.py --enable_network
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
