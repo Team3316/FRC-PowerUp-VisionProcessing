@@ -1,6 +1,6 @@
 #!/bin/sh
-local_path="vision.service"
-systemd_path="/etc/systemd/system/vision.service"
+local_path=$(pwd)'/vision.service'
+systemd_path='/etc/systemd/system/vision.service'
 
 if [ ! -f $local_path ]; then
 	echo " [!] Local file missing. Aborting."
