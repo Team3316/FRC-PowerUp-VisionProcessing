@@ -7,7 +7,6 @@ from constants import *
 from dbug_networking import DBugNetworking
 from dbug_video_stream import DBugVideoStream
 from dbug_result_object import DBugResult
-from dbug_lock_file import LockFile
 from logger import logger
 from dbug_contour import DbugContour
 
@@ -179,16 +178,9 @@ def run_vision_command(cam, robot_com, args):
             robot_com.sock.close()
 
 if __name__ == "__main__":
-
-    lock_file = LockFile("dbug-computer-vision-process.loc")
-
-    if lock_file.is_locked():
-        raise ValueError("Lock File Locked!")
-    else:
-        lock_file.lock()
-
     args = parse_arguments()
 
     cam, robot_com = init_vision_command(args)
 
     run_vision_command(cam, robot_com, args)
+
